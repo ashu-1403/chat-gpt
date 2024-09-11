@@ -3,11 +3,40 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Homepage from './routes/Homepage/Homepage';
+import Dashboardpage from './routes/dashboardpage/Dashboardpage';
+import Chatpage from './routes/chatpage/Chatpage';
+import RootLayout from './Layout/rootLayout/RootLayout';
+import DashboardLayout from './Layout/dashboardLayout/DashboardLayout';
+
+
+const router = createBrowserRouter([
+  {
+   element:<RootLayout/>,
+   children:[
+     { path: '/', element: <Homepage /> },
+     {
+      element:<DashboardLayout/>,
+      children:[
+        {
+          path:'/dashboard',
+          element:<Dashboardpage/>
+        },
+        {
+          path:"/dashboard/chats/:id",
+         element:<Chatpage/> 
+        } 
+      ]
+    }
+    ]
+  }
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
