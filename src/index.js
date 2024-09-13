@@ -9,13 +9,24 @@ import Dashboardpage from './routes/dashboardpage/Dashboardpage';
 import Chatpage from './routes/chatpage/Chatpage';
 import RootLayout from './Layout/rootLayout/RootLayout';
 import DashboardLayout from './Layout/dashboardLayout/DashboardLayout';
-
-
+import Signinpage from './routes/signinpage/Signinpage';
+import Signuppage from './routes/signupage/Signuppage';
 const router = createBrowserRouter([
   {
    element:<RootLayout/>,
    children:[
-     { path: '/', element: <Homepage /> },
+     {
+       path: '/',
+       element: <Homepage /> 
+      },
+      {
+        path: 'sign-in/*',
+        element: <Signinpage/> 
+       },
+       {
+        path: 'sign-up/*',
+        element: <Signuppage/>
+       },
      {
       element:<DashboardLayout/>,
       children:[

@@ -17,7 +17,7 @@ const RootLayout = () => {
         <header className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <img src={logo} alt='' className="w-12 h-12" /> 
-            <span className='text-white text-[14px] ml-2'> 
+            <span className='text-white text-[14px]'> 
               ChatGemini
             </span>
           </Link>
