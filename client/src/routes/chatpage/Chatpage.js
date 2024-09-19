@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import model from '../../lib/Gemini';
+import { Send, User, Bot } from 'lucide-react';
 
 const Chatpage = () => {
   const [messages, setMessages] = useState([
@@ -10,18 +11,15 @@ const Chatpage = () => {
   const [input, setInput] = useState('');
   const chatContainerRef = useRef(null);
 
-  // Auto scroll to the bottom when a new message is added
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Send message and get AI response
   const handleSendMessage = async (e) => {
-    e.preventDefault(); // Prevent form from refreshing the page
-
-    const userMessage = input.trim() || 'test message'; // Use custom message or default to "test message"
+    e.preventDefault();
+    const userMessage = input.trim();
     
     if (userMessage) {
       const newMessage = { id: messages.length + 1, sender: 'user', text: userMessage };
@@ -29,14 +27,11 @@ const Chatpage = () => {
       setInput('');
 
       try {
-        // Send the user's message to the AI API and get the response
         const aiResponse = await getAIResponse(userMessage);
-
-        // Set the AI response
         const aiMessage = {
           id: messages.length + 2,
           sender: 'ai',
-          text: aiResponse || 'text message', // Default to "text message" if there's no response
+          text: aiResponse || 'I apologize, but I couldn\'t generate a response. Please try again.',
         };
         setMessages((prevMessages) => [...prevMessages, aiMessage]);
       } catch (error) {
@@ -45,73 +40,80 @@ const Chatpage = () => {
     }
   };
 
-  // Function to get AI response using the Gemini API
   const getAIResponse = async (message) => {
     try {
       const result = await model.generateContent(message);
-      return result.response.text(); // Return the response from the AI API
+      return result.response.text();
     } catch (error) {
       console.error('Error generating AI response:', error);
       return null;
     }
   };
 
-  // Function to test AI API call with a fixed prompt
-  const add = async () => {
-    const prompt = "Write a story about a magic backpack.";
-
-    try {
-      const result = await model.generateContent(prompt);
-      console.log(result.response.text());
-    } catch (error) {
-      console.error('Error testing AI API:', error);
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-slate-600 text-white p-4">
-      {/* Messages container with auto-scroll and limited height */}
-      <div
-        ref={chatContainerRef}
-        className="flex-grow overflow-y-auto space-y-4 p-4 bg-gray-800 rounded-lg max-h-[78vh]"
-      >
-        {messages.map((message) => (
-          <motion.div
-            key={message.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+    <div className="flex flex-col h-screen bg-gray-50">
+      <main className="flex-grow overflow-hidden">
+        <div className="h-full max-w-5xl mx-auto px-4 py-6 flex flex-col">
+          <div
+            ref={chatContainerRef}
+            className="flex-grow overflow-y-auto space-y-6 pb-6"
           >
-            <div
-              className={`max-w-xs p-3 rounded-lg ${
-                message.sender === 'user'
-                  ? 'bg-white text-black'
-                  : 'bg-gray-700 text-white'
-              }`}
-            >
-              {message.text}
-            </div>
-          </motion.div>
-        ))}
-      </div>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`flex items-start space-x-2 max-w-md`}>
+                  {message.sender === 'ai' && (
+                    <div className="flex-shrink-0 w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <Bot size={20} className="text-gray-600" />
+                    </div>
+                  )}
+                  <div
+                    className={`p-4 rounded-2xl shadow-sm ${
+                      message.sender === 'user'
+                        ? 'bg-black text-white'
+                        : 'bg-white text-gray-800'
+                    }`}
+                  >
+                    {message.text}
+                  </div>
+                  {message.sender === 'user' && (
+                    <div className="flex-shrink-0 w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                      <User size={20} className="text-white" />
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </main>
 
-      {/* Input form for sending messages */}
-      <form className="w-full max-w-2xl mx-auto flex items-center space-x-2 p-4" onSubmit={handleSendMessage}>
-        <input
-          type="text"
-          placeholder="Type a message..."
-          className="w-full p-3 bg-gray-800 border border-gray-600 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="bg-white text-black p-3 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
-        >
-          Send
-        </button>
-      </form>
+      <footer className="bg-white border-t border-gray-200">
+        <div className="max-w-5xl mx-auto px-4 py-4">
+          <form onSubmit={handleSendMessage}>
+            <div className="flex items-center space-x-3">
+              <input
+                type="text"
+                placeholder="Type your message..."
+                className="flex-grow p-3 bg-gray-100 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent mb-24"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="bg-black text-white p-3 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 ease-in-out mb-24"
+              >
+                <Send size={20} />
+              </button>
+            </div>
+          </form>
+        </div>
+      </footer>
     </div>
   );
 };

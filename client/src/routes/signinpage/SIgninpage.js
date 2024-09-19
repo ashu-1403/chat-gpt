@@ -8,7 +8,7 @@ const Signinpage = () => {
       <SignIn
         path="/sign-in"
         signUpUrl="/sign-up"
-        forceRedirectUrl="/dashboard"
+        forceRedirectUrl="/dashboard/chats/:id"
       />
     </div>
   );
