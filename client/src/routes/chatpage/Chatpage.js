@@ -52,12 +52,12 @@ const Chatpage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      <main className="flex-grow overflow-hidden">
-        <div className="h-full max-w-5xl mx-auto px-4 py-6 flex flex-col">
-          <div
-            ref={chatContainerRef}
-            className="flex-grow overflow-y-auto space-y-6 pb-6"
-          >
+      <div className="flex-grow overflow-hidden flex flex-col">
+        <div 
+          ref={chatContainerRef}
+          className="flex-grow overflow-y-auto"
+        >
+          <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
             {messages.map((message) => (
               <motion.div
                 key={message.id}
@@ -91,29 +91,27 @@ const Chatpage = () => {
             ))}
           </div>
         </div>
-      </main>
+      </div>
 
-      <footer className="bg-white border-t border-gray-200">
-        <div className="max-w-5xl mx-auto px-4 py-4">
-          <form onSubmit={handleSendMessage}>
-            <div className="flex items-center space-x-3">
-              <input
-                type="text"
-                placeholder="Type your message..."
-                className="flex-grow p-3 bg-gray-100 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent mb-24"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="bg-black text-white p-3 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 ease-in-out mb-24"
-              >
-                <Send size={20} />
-              </button>
-            </div>
+      <div className="bg-white border-t border-gray-200 p-4">
+        <div className="max-w-5xl mx-auto">
+          <form onSubmit={handleSendMessage} className="flex items-center space-x-3">
+            <input
+              type="text"
+              placeholder="Type your message..."
+              className="flex-grow p-3 bg-gray-100 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent mb-40 md:mb-24"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-black text-white p-3 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 ease-in-out mb-40 md:mb-24"
+            >
+              <Send size={20} />
+            </button>
           </form>
         </div>
-      </footer>
+      </div>
     </div>
   );
 };
