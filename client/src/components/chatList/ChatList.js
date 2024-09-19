@@ -25,7 +25,7 @@ const LeftSideMenu = () => {
           {dashboardItems.map((item, index) => (
             <li key={index}>
               <Link
-                to={`/${item.name.toLowerCase().replace(/\s+/g, '-')}`}
+                to={`/dashboard/chats/:id`}
                 className="flex items-center p-2 text-sm hover:bg-gray-900 rounded transition duration-200"
               >
                 <item.icon size={16} className="mr-3 flex-shrink-0" />
